@@ -1,12 +1,12 @@
 const puppeteer = require("puppeteer");
-const drawSankey = require("./sankey");
+const drawSankey = require("./useDrawSankey");
 
 module.exports = async function (payload) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+    const html = require("fs").readFileSync(`${__dirname}/../public/index.html`, "utf8");
 
-    await page.setContent(`<html><body><div id="chart"></div></body></html>`);
-    await page.addScriptTag({ url: "https://d3js.org/d3.v4.min.js" });
+    await page.setContent(html);
 
     switch (payload.type) {
         case "Sankey":
