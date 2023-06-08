@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const getChart = require("./helpers/chart");
+const getChart = require("./helpers/drawChart");
 
 app.use(express.json());
 app.post("/api/chart", async (req, res) => {
