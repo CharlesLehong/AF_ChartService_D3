@@ -30,7 +30,7 @@ module.exports = async function (payload) {
             break;
     }
 
-    const chartDiv = await page.$(".container");
+    const chartDiv = await page.$("#chart");
     const chart = await chartDiv.screenshot({
         encoding: "binary",
     });

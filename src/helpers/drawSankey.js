@@ -10,9 +10,9 @@ module.exports = async function (page, data) {
         const container = d3.select(".container");
         const margin = {
             top: 20,
-            right: 120,
+            right: 150,
             bottom: 20,
-            left: 120,
+            left: 150,
         };
 
         const width = 1000 + (margin.left + margin.right);
@@ -32,7 +32,19 @@ module.exports = async function (page, data) {
             .attr("height", height)
             .attr("fill", "transparent");
 
-        function createSankeyDiagram(data, frame) {
+        const randomColor = () =>
+            "#000000".replace(/0/g, function () {
+                return (~~(Math.random() * 16)).toString(16);
+            });
+
+        const createSankeyDiagram = (data, frame) => {
+            const investmentTypes = { Compulsory: "#15808D26", Discretionary: "#F6952126" };
+            const colors = {};
+
+            data.nodes.forEach((node) => {
+                colors[node.name] = investmentTypes[node.type] ? investmentTypes[node.type] : randomColor();
+            });
+
             const color = d3.scaleOrdinal(d3.schemeSet3);
             const sankey = d3.sankey().extent([
                 [0, 0],
@@ -76,7 +88,7 @@ module.exports = async function (page, data) {
                 })
                 .attr("d", sankeyLinks)
                 .attr("fill", "none")
-                .attr("stroke", (d) => `url(#gradient${d.index})`)
+                .attr("stroke", (d) => colors[d.source.name])
                 .attr("stroke-width", (d) => d.width)
                 .attr("opacity", 0.5);
 
@@ -91,9 +103,9 @@ module.exports = async function (page, data) {
                 .attr("width", (d) => d.x1 - d.x0)
                 .attr("height", (d) => d.y1 - d.y0)
                 .attr("pointer-events", "none")
-                .attr("stroke", "#555")
+                .attr("stroke", "#none")
                 .attr("stroke-width", "1px")
-                .attr("fill", (d) => color(d.index));
+                .attr("fill", (d) => colors[d.name]);
 
             frame
                 .selectAll("text.node")
@@ -101,7 +113,7 @@ module.exports = async function (page, data) {
                 .enter()
                 .append("text")
                 .text((d) => d.name)
-                .attr("font-size", "9px")
+                .attr("font-size", "10px")
                 .attr("font-weight", "bold")
                 .attr("fill", "#111")
                 .attr("x", (d) => {
@@ -123,14 +135,15 @@ module.exports = async function (page, data) {
                 .attr("class", "labelText")
                 .attr("dx", 5)
                 .attr("dy", 0)
+                .attr("font-size", "10px")
                 .append("textPath")
                 .attr("xlink:href", function (d, i) {
                     return "#linkLabel" + i;
                 })
                 .text(function (d, i) {
-                    return "R" + d.value;
+                    return `R${d.value} ${d.tax ? " - tax (R" + d.tax + ")" : ""}`;
                 });
-        }
+        };
 
         createSankeyDiagram(data, containerFrame);
     }, data);
