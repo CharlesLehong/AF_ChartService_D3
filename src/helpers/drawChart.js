@@ -3,7 +3,7 @@ const drawSankey = require("./drawSankey");
 const { htmlTemplate } = require("./templates");
 
 module.exports = async function (payload) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
 
     await page.emulate({

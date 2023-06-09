@@ -32,10 +32,28 @@ module.exports = async function (page, data) {
             .attr("height", height)
             .attr("fill", "transparent");
 
-        const randomColor = () =>
-            "#000000".replace(/0/g, function () {
-                return (~~(Math.random() * 16)).toString(16);
-            });
+        const randomColor = () => {
+            const colors = [
+                "#0087DC",
+                "#0087DC",
+                "#DC241f",
+                "#DC241f",
+                "#6AB023",
+                "#6AB023",
+                "#70147A",
+                "#70147A",
+                "#FDBB30",
+                "#FDBB30",
+                "#FFFF00",
+                "#FFFF00",
+                "#614126",
+                "#C3834C",
+                "#7F7F7F",
+                "#7F7F7F",
+            ];
+
+            return colors[Math.floor(Math.random() * 15)];
+        };
 
         const createSankeyDiagram = (data, frame) => {
             const investmentTypes = { Compulsory: "#15808D26", Discretionary: "#F6952126" };
